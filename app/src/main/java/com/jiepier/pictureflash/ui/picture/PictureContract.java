@@ -23,9 +23,7 @@ public class PictureContract {
 
         void setPictureData(List<String> list,String dirPath);
 
-        void getImageFloders(List<ImageFloder> list);
-
-        void getImgs(List<String> list);
+        void setImageFloders(List<ImageFloder> list);
     }
 
     interface Model{
@@ -34,5 +32,7 @@ public class PictureContract {
 
     interface Presenter extends BasePresenter<View>{
         void getImages();
+
+        void createAlumb(String alumbName,List<String> path);
     }
 }

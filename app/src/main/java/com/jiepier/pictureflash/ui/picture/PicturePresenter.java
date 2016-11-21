@@ -8,8 +8,10 @@ import android.os.AsyncTask;
 import android.os.Environment;
 import android.provider.MediaStore;
 import android.support.annotation.NonNull;
+import android.util.Log;
 
 import com.jiepier.pictureflash.bean.ImageFloder;
+import com.jiepier.pictureflash.sql.PictureService;
 
 import java.io.File;
 import java.io.FilenameFilter;
@@ -31,6 +33,7 @@ public class PicturePresenter implements PictureContract.Presenter {
     private File mImgDir;
     private List<ImageFloder> mImageFloders = new ArrayList<ImageFloder>();
     private List<String> mImgs;
+    private PictureService mSqlService;
 
     /**
      * 临时的辅助类，用于防止同一个文件夹的多次扫描
@@ -47,6 +50,13 @@ public class PicturePresenter implements PictureContract.Presenter {
     }
 
     @Override
+    public void createAlumb(String alumbName, List<String> path) {
+        mSqlService = new PictureService(mContext,1);
+        for (int i=0;i<path.size();i++)
+            mSqlService.insert(path.get(i),alumbName);
+    }
+
+    @Override
     public void attachView(@NonNull PictureContract.View view) {
         this.view = view;
     }
@@ -56,7 +66,7 @@ public class PicturePresenter implements PictureContract.Presenter {
         this.view = null;
     }
 
-    class ScanAsyncTask extends AsyncTask<Void,Void,Void>{
+    private class ScanAsyncTask extends AsyncTask<Void,Void,Void>{
 
         @Override
         protected void onPreExecute() {
@@ -114,16 +124,14 @@ public class PicturePresenter implements PictureContract.Presenter {
                 int picSize = parentFile.list(new FilenameFilter() {
                     @Override
                     public boolean accept(File file, String filename) {
-                        if (filename.endsWith(".jpg")
+                        return filename.endsWith(".jpg")
                                 || filename.endsWith(".png")
-                                || filename.endsWith(".jpeg"))
-                            return true;
-                        return false;
+                                || filename.endsWith(".jpeg");
                     }
                 }).length;
                 totalCount += picSize;
 
-                imageFloder.setCount(totalCount);
+                imageFloder.setCount(picSize);
                 mImageFloders.add(imageFloder);
 
                 if (picSize > mPicsSize){
@@ -141,18 +149,17 @@ public class PicturePresenter implements PictureContract.Presenter {
         protected void onPostExecute(Void aVoid) {
             super.onPostExecute(aVoid);
             view.dismissLoading();
-            data2View();
+
+            if (mImgDir == null){
+                view.showToast("一张图片都没扫描到。。");
+                return;
+            }
+
+            mImgs = Arrays.asList(mImgDir.list());
+            view.setPictureData(mImgs,mImgDir.getAbsolutePath());
+            view.setPicTotalCount(totalCount+"张");
+            view.setImageFloders(mImageFloders);
         }
     }
 
-    private void data2View() {
-        if (mImgDir == null){
-            view.showToast("一张图片都没扫描到。。");
-            return;
-        }
-
-        mImgs = Arrays.asList(mImgDir.list());
-        view.setPictureData(mImgs,mImgDir.getAbsolutePath());
-        view.setPicTotalCount(totalCount+"");
-    }
 }

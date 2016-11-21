@@ -1,12 +1,20 @@
 package com.jiepier.pictureflash.base;
 
+import android.content.res.Resources;
 import android.graphics.Bitmap;
+import android.graphics.Color;
+import android.graphics.ColorFilter;
 import android.support.annotation.StringRes;
 import android.support.v7.widget.RecyclerView;
 import android.util.SparseArray;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
+
+import com.jiepier.pictureflash.util.image.ImageLoader;
+import com.jiepier.pictureflash.util.image.Type;
+
+import java.io.ByteArrayOutputStream;
 
 /**
  * Created by panruijiesx on 2016/11/14.
@@ -54,6 +62,12 @@ public class BaseViewHolder extends RecyclerView.ViewHolder {
         return this;
     }
 
+    public BaseViewHolder setImageResource(int viewId, int resourceId){
+        ImageView imageView = getView(viewId);
+        imageView.setImageResource(resourceId);
+        return this;
+    }
+
     public BaseViewHolder setTag(int viewId, Object tag) {
         View view = getView(viewId);
         view.setTag(tag);
@@ -63,6 +77,25 @@ public class BaseViewHolder extends RecyclerView.ViewHolder {
     public BaseViewHolder setTag(int viewId, int key, Object tag) {
         View view = getView(viewId);
         view.setTag(key, tag);
+        return this;
+    }
+
+    public BaseViewHolder setImageByUrl(int viewId,String url){
+        View view = getView(viewId);
+        ImageLoader.getInstance(3, ImageLoader.Type.LIFO)
+                .loadImage(url,(ImageView) getView(viewId));
+        return this;
+    }
+
+    public BaseViewHolder setColorFilter(int viewId,int color){
+        View view = getView(viewId);
+        ((ImageView)view).setColorFilter(Color.parseColor("#77000000"));
+        return this;
+    }
+
+    public BaseViewHolder setColorFilter(int viewId, ColorFilter colorFilter){
+        View view = getView(viewId);
+        ((ImageView)view).setColorFilter(colorFilter);
         return this;
     }
 
