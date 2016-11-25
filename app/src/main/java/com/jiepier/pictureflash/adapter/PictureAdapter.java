@@ -7,8 +7,10 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.RelativeLayout;
 
 import com.jiepier.pictureflash.R;
+import com.jiepier.pictureflash.base.App;
 import com.jiepier.pictureflash.base.BaseViewHolder;
 
 import java.io.File;
@@ -37,6 +39,8 @@ public class PictureAdapter extends RecyclerView.Adapter<BaseViewHolder> {
     @Override
     public BaseViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(mContext).inflate(R.layout.item_picture,parent,false);
+        ImageView iv = (ImageView) view.findViewById(R.id.id_item_image);
+        iv.setLayoutParams(new RelativeLayout.LayoutParams(App.sScreenWidth/2,App.sScreenWidth/2));
         return new BaseViewHolder(view);
     }
 

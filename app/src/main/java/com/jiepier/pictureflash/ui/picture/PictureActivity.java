@@ -99,7 +99,7 @@ public class PictureActivity extends BaseActivity implements PictureContract.Vie
                            mPresenter.createAlumb(editText.getText().toString(),mAdapter.getmSelectedImage());
                            editText.setText("");
                            mAdapter.clearSelected();
-                           Toast.makeText(mContext,"666",Toast.LENGTH_SHORT).show();
+                           Toast.makeText(mContext,"创建成功",Toast.LENGTH_SHORT).show();
                        }else {
                            mDialog.show();
                            Toast.makeText(mContext,"专辑名不能为空",Toast.LENGTH_SHORT).show();
@@ -128,6 +128,7 @@ public class PictureActivity extends BaseActivity implements PictureContract.Vie
         });
 
         baseToolBar.setLeftIcon(getResources().getDrawable(R.drawable.ic_arrow_back_black_36dp));
+        baseToolBar.setRightIcon(getResources().getDrawable(R.drawable.ic_check_white_36dp));
         baseToolBar.setLeftViewOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
